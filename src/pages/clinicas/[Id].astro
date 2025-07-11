@@ -1,0 +1,26 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+    const info = await getCollection('info');
+    return info.map(info => ({
+        params: { Id: info.slug },
+        props: {info}
+    }));
+}
+
+const { info } = Astro.props;
+const { data , slug } = info;
+const { centro, img, horario, descripcion } = data;   
+
+---
+
+<Layout title={centro}>
+    <main class='text-center'>
+        <h1 class='text-5xl font-bold'>{centro}</h1>
+        <img transition:name={`img-${slug}`} class="rounded w-72 h-auto" src={`/${img}`} alt={centro} />
+        <p class='text-lg'>{horario}</p>
+        <p class='mt-4'>{descripcion}</p>
+    </main>
+<Layout/>

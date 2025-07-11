@@ -1,11 +1,38 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const info = await getCollection('info');
 ---
 
 <Layout>
-	<Welcome />
+	<main>
+		<h1 class='text-center text-7xl font-extrabold'>
+		Bienvenido a <span class='block'>Centro medico</span>
+		</h1>
+	</main>
+	<section aria-label="Informacion centros medicos">
+		<div class="px4 mx-auto max-w-screen-xl">
+			<div class='grid pad-6 md:grid-cols-2 margin-4 gap-4'>
+				{
+				info.map(info => {
+					const { data } = info;
+					const { centro, img, horario, descripcion } = data;
+					return (
+					<article><a href={`/clinicas/${info.slug}`}  class="mb-2 xl:mb-0 transition hover:scale-110">
+						<img
+						src={img}
+						alt={centro}
+						class='w-full h-64 object-cover mb-4'/>
+						<h3>{centro}</h3>
+						<p>{horario}</p>
+						<p>{descripcion}</p>
+						</a>
+					</article>
+					);})
+				}
+			</div>
+		</div>
+	</section>
 </Layout>
+
