@@ -15,7 +15,7 @@ const profesionales = defineCollection({
         nombre: z.string(),
         especialidad: z.string(),
         dias: z.array(z.enum(["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"])),
-        clinicaId: z.string(), 
+        clinicaId: z.array(z.string()), 
     }),
 });
 

@@ -16,9 +16,11 @@ const { data , slug } = info;
 const { centro, img, horario, descripcion,wsp } = data;   
 
 const allProfessionals = await getCollection('profesionales');
-const profesionales = allProfessionals.filter(profesionales => profesionales.data.clinicaId === slug);
+const profesionales = allProfessionals.filter(profesionales => profesionales.data.clinicaId.some(clinica => clinica.toLowerCase() === slug.toLowerCase()));
 
 const diasSemana = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"] as const;
+const especialidades = [...new Set(profesionales.map(p => p.data.especialidad))];
+
 
 export const prerender = true
 ---
@@ -32,16 +34,24 @@ export const prerender = true
                     <p class='text-lg'>{horario}</p>
                     <p class='mt-4'>{descripcion}</p>
                     <p class='text-lg'>{wsp}</p>
+                    <a href={`http://wa.me/56975208337`} class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors">Agendar por WhatsApp</a>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d206.0104130086367!2d-72.63585621235504!3d-38.987928702771804!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9614df006b21479d%3A0x6b8abc432b9ddaed!2sDiagnoprev%20Pitrufquen!5e0!3m2!1ses!2scl!4v1752872821011!5m2!1ses!2scl" width="250" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </aside>
         <main class="max-w-3xl">
             <h1 transition:name={`title-${slug}`} class="text-4xl font-bold mb-4">{horario}</h1>
-            <div class="prose prose-invert">
+            <div class="prose prose-invert"> 
             <!-- Tabla  -->
-                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Profesionales Disponibles</h2>
+                <h2 class="text-2xl font-semibold text-white mb-4">Profesionales Disponibles</h2>
+                    <label for="filtro-especialidad" >Filtrar por especialidad:</label>
+                        <select id="filtro-especialidad" class="bg-gray-200 text-black p-2 rounded">
+                            <option value="Todas">Todas</option>
+                            {especialidades.map(especialidad => (<option value={especialidad}>{especialidad}</option>))}
+                        </select>
+                <br><br>
                 <div class="overflow-x-auto">
-                    <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                    <table class="min-w-full bg-white rounded-lg overflow-hidden" id="tabla-profesionales">
                         <thead class="bg-gray-100">
-                        <tr>
+                        <tr >
                             <th class="py-3 px-4 text-left font-semibold text-gray-700">Nombre</th>
                             <th class="py-3 px-4 text-left font-semibold text-gray-700">Especialidad</th>
                             {diasSemana.map(dia => (
@@ -51,7 +61,7 @@ export const prerender = true
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                         {profesionales.map(prof => (
-                            <tr class="hover:bg-gray-50">
+                            <tr class="hover:bg-gray-50" data-especialidad={prof.data.especialidad}>
                             <td class="py-4 px-4 font-medium text-gray-800">{prof.data.nombre}</td>
                             <td class="py-4 px-4 text-gray-600">{prof.data.especialidad}</td>
                             
@@ -78,6 +88,7 @@ export const prerender = true
             </div>
         </main>
     </div>
+    <script type="module" src="/filtro.js"></script>
 <Layout/>
 
 
