@@ -3,6 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const info = await getCollection('info');
+const profesionales = await getCollection('profesionales');
+export const prerender = true
 ---
 
 <Layout>
@@ -20,19 +22,18 @@ const info = await getCollection('info');
 					const { centro, img, horario, descripcion } = data;
 					return (
 					<article><a href={`/clinicas/${info.slug}`}  class="mb-2 xl:mb-0 transition hover:scale-110">
-						<img
-						src={img}
-						alt={centro}
-						class='w-full h-64 object-cover mb-4'/>
-						<h3>{centro}</h3>
-						<p>{horario}</p>
-						<p>{descripcion}</p>
+						<img 
+							src={img}
+							alt={centro}
+							class='w-full h-64 object-cover mb-4'/>
+							<h3>{centro}</h3>
+							<p>{horario}</p>
+							<p>{descripcion}</p>
 						</a>
 					</article>
 					);})
 				}
 			</div>
 		</div>
-	</section>
-</Layout>
-
+	</section> 
+	</Layout>

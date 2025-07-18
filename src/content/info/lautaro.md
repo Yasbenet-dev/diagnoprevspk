@@ -1,6 +1,6 @@
 ---
-centro: Galvarino
-img: diagnoprev.png
+centro: Lautaro
+img: ../diagnoprev.png
 horario: 'Lunes a Sabado'
 descripcion: atiendete con diagnoprev
 wsp: +569585858"

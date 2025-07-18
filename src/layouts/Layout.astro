@@ -1,3 +1,9 @@
+---
+import { ClientRouter } from 'astro:transitions';
+
+const { centro } = Astro.props;
+---
+
 <!doctype html>
 <html lang="en">
 	<head>
@@ -7,7 +13,8 @@
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
 		
 		<meta name="generator" content={Astro.generator} />
-		<title>Diagnoprev</title>
+		<title>{centro}</title>
+		<ClientRouter />
 	</head>
 	<body>
 		<div>
@@ -16,13 +23,30 @@
 	</body>
 </html>
 
-<style>
-	html,
-	body {
-		@apply grid place-content-center;
-	} 
-	body > div {
-    	@apply container;
+<style is:global>
+	:root {
+		--accent: 136, 58, 234;
+		--accent-light: 224, 204, 250;
+		--accent-dark: 49, 10, 101;
+		--accent-gradient: linear-gradient(
+			45deg,
+			rgb(var(--accent)),
+			rgb(var(--accent-light)) 30%,
+			white 60%
+		);
+	}
+	
+	html {
+		font-family: system-ui, sans-serif;
+		background: #13151a;
+		color: #fff;
 	}
 
-</style>
+	body {
+		@apply grid place-content-center;
+	}
+
+	body > div {
+		@apply container;
+	}
+	</style>

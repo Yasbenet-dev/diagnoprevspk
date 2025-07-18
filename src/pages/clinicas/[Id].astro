@@ -1,26 +1,83 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
+import { getCollection} from 'astro:content';
 
 export async function getStaticPaths() {
-    const info = await getCollection('info');
+    const info = await getCollection('info') 
+
     return info.map(info => ({
         params: { Id: info.slug },
         props: {info}
-    }));
-}
+        }));
+    }
 
 const { info } = Astro.props;
 const { data , slug } = info;
-const { centro, img, horario, descripcion } = data;   
+const { centro, img, horario, descripcion,wsp } = data;   
 
+const allProfessionals = await getCollection('profesionales');
+const profesionales = allProfessionals.filter(profesionales => profesionales.data.clinicaId === slug);
+
+const diasSemana = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"] as const;
+
+export const prerender = true
 ---
 
 <Layout title={centro}>
-    <main class='text-center'>
-        <h1 class='text-5xl font-bold'>{centro}</h1>
-        <img transition:name={`img-${slug}`} class="rounded w-72 h-auto" src={`/${img}`} alt={centro} />
-        <p class='text-lg'>{horario}</p>
-        <p class='mt-4'>{descripcion}</p>
-    </main>
+    <div class="flex gap-12">
+        <aside class="flex flex-col items-center gap-4">
+            <a href='/' class="hover:underline opacity-70">← Volver atrás</a>
+                    <h1 class='text-5xl font-bold'>{centro}</h1>
+                    <img transition:name={`img-${slug}`} class="rounded w-72 h-auto" src={`/${img}`} alt={centro} />
+                    <p class='text-lg'>{horario}</p>
+                    <p class='mt-4'>{descripcion}</p>
+                    <p class='text-lg'>{wsp}</p>
+        </aside>
+        <main class="max-w-3xl">
+            <h1 transition:name={`title-${slug}`} class="text-4xl font-bold mb-4">{horario}</h1>
+            <div class="prose prose-invert">
+            <!-- Tabla  -->
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Profesionales Disponibles</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                        <thead class="bg-gray-100">
+                        <tr>
+                            <th class="py-3 px-4 text-left font-semibold text-gray-700">Nombre</th>
+                            <th class="py-3 px-4 text-left font-semibold text-gray-700">Especialidad</th>
+                            {diasSemana.map(dia => (
+                            <th class="py-3 px-4 text-center font-semibold text-gray-700">{dia}</th>
+                            ))}
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                        {profesionales.map(prof => (
+                            <tr class="hover:bg-gray-50">
+                            <td class="py-4 px-4 font-medium text-gray-800">{prof.data.nombre}</td>
+                            <td class="py-4 px-4 text-gray-600">{prof.data.especialidad}</td>
+                            
+                            {diasSemana.map(dia => (
+                                <td class="py-4 px-4 text-center">
+                                {prof.data.dias.includes(dia) ? (
+                                    <span 
+                                        class="inline-block w-6 h-6 bg-green-500 rounded-full"
+                                        title={`Disponible ${dia}`}
+                                    ></span>
+                                ) : (
+                                    <span 
+                                        class="inline-block w-6 h-6 bg-gray-200 rounded-full"
+                                        title={`No disponible ${dia}`}
+                                    ></span>
+                                )}
+                                </td>
+                            ))}
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
 <Layout/>
+
+
