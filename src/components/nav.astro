@@ -1,0 +1,24 @@
+---
+const navItems = [
+{ name: "Inicio", id: "/" },
+{ name: "Servicios", id: "services" },
+{ name: "Contacto", id: "contact" },
+];
+---
+<nav class="fixed top-0 left-0 w-full bg-transparent shadow-md z-50">
+    <div class="flex  px-6 py-3 justify-center items-center space-x-8">
+        <a href="/" class="text-2xl font-bold text-blue-600">Diagnoprev</a>
+            <ul class="flex space-x-8 text-blue-800">
+                {navItems.map((item) => (
+                    <li>
+                        <a 
+                            href={`/${item.id}`} 
+                            class="hover:text-blue-600 transition-colors"
+                        >
+                        {item.name}
+                        </a>
+                        </li>
+                    ))}
+            </ul>
+    </div>
+</nav>

@@ -1,6 +1,6 @@
 ---
 import { ClientRouter } from 'astro:transitions';
-
+import Navbar from '../components/nav.astro';
 const { centro } = Astro.props;
 ---
 
@@ -10,17 +10,28 @@ const { centro } = Astro.props;
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
-		
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"/>
 		<meta name="generator" content={Astro.generator} />
 		<title>{centro}</title>
 		<ClientRouter />
+		<style>
+			html {
+			scroll-behavior: smooth;}
+		</style>
 	</head>
 	<body>
+		<Navbar />
 		<div>
 			<slot />
 		</div>	
 	</body>
+
+	<footer>
+		<div class="text-center p-4">
+			<p>&copy; 2025 Diagnoprev. Todos los derechos reservados.</p>
+			<p>Desarrollado por YasBenet</p>
+	</footer>
+
 </html>
 
 <style is:global>
@@ -44,6 +55,7 @@ const { centro } = Astro.props;
 
 	body {
 		@apply grid place-content-center;
+		overflow-x: hidden;
 	}
 
 	body > div {
